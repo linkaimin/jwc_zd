@@ -40,39 +40,39 @@ export default {
    
     submitLogin (formName) {
        var that = this;
-  //     this.$refs[formName].validate((valid) => {
-  //      this.$axios.get('/login', {
-  //   params: {
-  //     phone:this.ruleForm.account,
-  //     password:this.ruleForm.password
-  //   }
-  // })
-  // .then(function (response) {
-  //   console.log(response);
-  //     if (response.data.resultCode === 200) {
-  //        sessionStorage.setItem("session", response.data);
-  //         that.$message({
-  //           message: '登陆成功',
-  //           type: 'success',
-  //           duration: 2000
-  //         })
+      this.$refs[formName].validate((valid) => {
+       this.$axios.get('/login', {
+    params: {
+      phone:this.ruleForm.account,
+      password:this.ruleForm.password
+    }
+  })
+  .then(function (response) {
+    console.log(response);
+      if (response.data.resultCode === 200) {
+         sessionStorage.setItem("session", response.data);
+          that.$message({
+            message: '登陆成功',
+            type: 'success',
+            duration: 2000
+          })
           
-  //          that.$router.push({ path:'index'})
+           that.$router.push({ path:'index'})
        
-  //       } else {
-  //         that.$message({
-  //           message: '登陆失败，可能是密码或用户名错误',
-  //           type: 'error',
-  //           duration: 2000
-  //         })
-  //       }
-  // })
-  // .catch(function (error) {
-  //   console.log(error);
-  // });
+        } else {
+          that.$message({
+            message: '登陆失败，可能是密码或用户名错误',
+            type: 'error',
+            duration: 2000
+          })
+        }
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
       
-  //     })
-       that.$router.push({ path:'index'})
+      })
+      
     },
     resetForm (formName) {
       this.$refs[formName].resetFields()

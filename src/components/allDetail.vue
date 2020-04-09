@@ -18,7 +18,7 @@
    <hr class="hr">
    <div id="text">内容简介：{{text}}</div>
    <hr class="hr">
-   附件预览：<el-button style="padding: 3px 0" type="text">点击预览</el-button>
+   附件预览：<el-button style="padding: 3px 0" type="text" @click="download">点击预览</el-button>
    <hr class="hr">
   <span>评分：</span> <el-input v-model="input" placeholder="请输入"></el-input>
   </div>
@@ -44,12 +44,19 @@ export default {
       text:"通过总结、归纳有关价值理论基础来指导开展森林资源资产价值的研究，探讨如何构建出功能更加完善的基于数据可视化的森林资源资产评估管理系统。只有森林资源的价值得以精准量化，完善森林资源价值评估研究内容，才能提高相关从业人员的工作效率。科学地评估森林资源价值，使森林资源在市场经济的作用下配置能够优化，从而促进林业行业的持续、快速、健康发展。",
       input:"",
       about:"",
+      projectId:"森林资产评估系统",
+      fileName:""
     }
   },
   mounted(){
 
   },
   methods: {
+    download(){
+       this.$axios.get( `/document/download/${that.projectId}/${that.fileName}`, {
+     })
+     .then(function (response){})
+    },
     exit: function () {
       sessionStorage.clear()
         this.$message({
@@ -66,7 +73,24 @@ export default {
     },
    
   }
-
+   open() {
+        this.$prompt('请输入邮箱', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
+          inputErrorMessage: '邮箱格式不正确'
+        }).then(({ value }) => {
+          this.$message({
+            type: 'success',
+            message: '你的邮箱是: ' + value
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消输入'
+          });       
+        });
+      }
 </script>
 
 <style>

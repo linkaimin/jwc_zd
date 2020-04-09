@@ -7,7 +7,7 @@ import ElementUI from 'element-ui'
 import axios from 'axios'
 import 'element-ui/lib/theme-chalk/index.css'
 axios.defaults.withCredentials=true;
-axios.defaults.baseURL = 'http://39.97.112.80:2080/xjwc'
+axios.defaults.baseURL = 'http://118.24.41.50:8083/jwc/'
 Vue.config.productionTip = false
 import VueSessionStorage from 'vue-sessionstorage'
 Vue.use(VueSessionStorage)
