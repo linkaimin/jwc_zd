@@ -7,16 +7,16 @@
   </el-header>
   <el-main>
 <el-row>
-  <el-col :span="6" v-for="(o) in 6" :key="o" :offset="1"  style="margin-bottom:40px">
+  <el-col :span="6" v-for="item in items" :key="item.activityId" :offset="1"  style="margin-bottom:40px">
     <el-card :body-style="{ padding: '0px' }">
       <img src="../assets/activity.png" class="image">
       <div style="padding: 14px;">
-        <span>{{activity}}</span>
+        <span>{{item.name}}</span>
         <div class="bottom clearfix">
-          <time class="time">开始时间：{{ currentDate }}</time>
+          <time class="time">开始时间：{{ item.startTime }}</time>
           <br>
-           <time class="time">结束时间：{{ currentDate }}</time>
-          <el-button type="text" class="button" @click="goto">点击进入</el-button>
+           <time class="time">结束时间：{{ item.endTime }}</time>
+          <el-button type="text" class="button" @click="handle(item.activityId,item.type)">点击进入</el-button>
         </div>
       </div>
     </el-card>
@@ -31,15 +31,34 @@
 export default {
   data(){
     return{
-      name:"林开敏",
-      currentDate: new Date().getFullYear(),
-      activity:"大学生创新创业项目"
+      name:"",
+      activity:"",
+      items : {}
     }
   },
   mounted(){
-
+  this.myactivity()
   },
-  methods: {
+  methods: {     
+    handle(activityId,type) {
+      var that = this;
+         this.$router.push({
+          path: '/show',
+          query: {activityId:activityId,type:type}
+         })
+      },
+    myactivity(){
+      var that = this;
+  console.log(sessionStorage['userName'])
+   this.name = sessionStorage['userName']
+   this.$axios.get(`/activity/now?userId=${sessionStorage['userId']}`,{
+
+   }).then(function (response) {
+     if(response.data.resultCode === 200){
+       that.items = response.data.data
+     }
+   })
+    },
     exit: function () {
       sessionStorage.clear()
         this.$message({
@@ -49,12 +68,9 @@ export default {
           })
           this.$router.push('/')
     },
-     goto:function(){
-       this.$router.push('/show')
-     }
-    },
     
-   
+    },
+
   }
 
 </script>

@@ -51,6 +51,8 @@ export default {
     console.log(response);
       if (response.data.resultCode === 200) {
          sessionStorage.setItem("session", response.data);
+         sessionStorage.setItem("userName", response.data.data.userName);
+         sessionStorage.setItem("userId", response.data.data.userId);
           that.$message({
             message: '登陆成功',
             type: 'success',
