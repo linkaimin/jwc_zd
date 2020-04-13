@@ -1,4 +1,5 @@
 <template>
+
 <el-container>
   <el-header id="top"> 
    评估系统用户端
@@ -22,6 +23,7 @@
     </el-card>
   </el-col>
 </el-row>
+<h1>{{message}}</h1>
   </el-main>
 </el-container>
 
@@ -33,7 +35,8 @@ export default {
     return{
       name:"",
       activity:"",
-      items : {}
+      items : [],
+      message:''
     }
   },
   mounted(){
@@ -54,8 +57,14 @@ export default {
    this.$axios.get(`/activity/now?userId=${sessionStorage['userId']}`,{
 
    }).then(function (response) {
-     if(response.data.resultCode === 200){
+     console.log(response.data.resultCode)
+     if(response.data.resultCode == 200){
        that.items = response.data.data
+       }
+      if(response.data.resultCode == 500){
+        that.message = '当前没有需要评分的活动！'
+       console.log(111)
+      
      }
    })
     },

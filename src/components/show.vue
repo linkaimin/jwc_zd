@@ -47,12 +47,8 @@ export default {
         var data = this.$route.query;
         console.log(data)
         this.$axios({
-          method:'post',
-          data:{
-          "activityId" : data.activityId,
-          'userId':sessionStorage['userName'].userId
-          },
-          url:'/pro'
+          method:'get',
+          url:`/project/user?userId=${sessionStorage['userName'].userId}&activityId=${data.activityId}` 
         }).then(function(response){
         if (response.data.resultCode === 200) {
         that.items = response.data.data
