@@ -8,7 +8,7 @@
   <el-main>
 <el-card class="box-card" id="main">
   <div slot="header" class="clearfix">
-    <span id="title">序号{{number}}：{{project}}</span>
+    <span id="title">序号{{activityId}}：{{Pname}}</span>
     
   </div>
   <div  class="text item">
@@ -16,12 +16,22 @@
    <hr class="hr">
    负责人：{{leader}}
    <hr class="hr">
-   <div id="text">内容简介：{{text}}</div>
+   <div id="text">内容简介：{{info}}</div>
    <hr class="hr">
-   附件预览：<el-button style="padding: 3px 0" type="text" @click="download">点击预览</el-button>
-   <hr class="hr">
-  <span>评分：</span> <el-input v-model="input" placeholder="请输入"></el-input>
+   <el-button @click="handledocument">附件预览</el-button><el-dialog title="查看文件" :visible.sync="dialogFormVisible">
+
+        <label id="checkbox" v-for="item in file" :key = item>
+        <a :href=item>{{item}}</a><br>
+        </label>
+
+  <div slot="footer" class="dialog-footer">
+    <el-button @click="dialogFormVisible = false">取 消</el-button>
+    <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
   </div>
+</el-dialog>
+   <hr class="hr"><span>评分：</span><div id="part" v-for="item in list" :key = item.lname>
+   类型：{{item.lname}}  占比：{{item.part}}  得分：<el-input id='partInput' :v-model="item.value" placeholder="请输入"></el-input>
+  </div></div>
    <hr class="hr">
   <span>评语：</span> <el-input v-model="about" placeholder="请输入"></el-input>
   <hr class="hr">
@@ -36,26 +46,56 @@
 export default {
   data(){
     return{
-      number:"1",
-      name:"林开敏",
-      project:"森林资产评估系统",
-      leader:"林开敏",
-      unit:"信息学院",
-      text:"通过总结、归纳有关价值理论基础来指导开展森林资源资产价值的研究，探讨如何构建出功能更加完善的基于数据可视化的森林资源资产评估管理系统。只有森林资源的价值得以精准量化，完善森林资源价值评估研究内容，才能提高相关从业人员的工作效率。科学地评估森林资源价值，使森林资源在市场经济的作用下配置能够优化，从而促进林业行业的持续、快速、健康发展。",
+      activityId: '',
+      leader: "",
+      score: '',
+      unit: "",
+      name: "",
+      projectId: '',
+      isScored: "",
+      info: "",
       input:"",
       about:"",
-      projectId:"森林资产评估系统",
-      fileName:""
+      fileName:"",
+      Pname:"",
+      dialogFormVisible: false,
+      file:[],
+      list:[],
     }
   },
   mounted(){
-
+  this.show()
   },
   methods: {
+    handledocument(){
+        this.dialogFormVisible = true
+        var that = this
+       this.$axios.get('/document/preview/'+that.projectId, {
+  
+     }).then(function (response){
+      if (response.data.resultCode === 200) {
+          that.file = response.data.data.file
+          console.log(response.data.data)
+      }
+     })
+      },
     download(){
        this.$axios.get( `/document/download/${that.projectId}/${that.fileName}`, {
      })
      .then(function (response){})
+    },
+    show(){
+    this.name = sessionStorage['userName']
+    var data = this.$route.query.ruleForm;
+    console.log(data);
+    this.activityId = data.activityId
+    this.leader = data.leader
+    this.unit = data.unit
+    this.Pname = data.name
+    this.projectId = data.projectId
+    this.info = data.info
+    this.list = data.tag,
+     console.log(this.list);
     },
     exit: function () {
       sessionStorage.clear()
@@ -77,7 +117,13 @@ export default {
 </script>
 
 <style>
+#part{
+  margin: 1rem;
+}
+#partInput{
 
+ display: inline;
+}
 .el-input{
   width: 90%;
 }

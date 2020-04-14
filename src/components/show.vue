@@ -10,14 +10,14 @@
   <el-col :span="6" v-for="item in items" :key="item.projectId" :offset="1"  style="margin-bottom:40px">
     <el-card :body-style="{ padding: '0px' }">
       <img src="../assets/project.png" class="image">
-       <el-tag :type="type" id="tag">{{item.tag}}</el-tag>
+       <el-tag  id="tag">{{item.isScored}}</el-tag>
       <div style="padding: 14px;">
-        <span>序号{{item.number}}：{{item.project}}</span>
+        <span>序号{{item.projectId}}：{{item.name}}</span>
         <div class="bottom clearfix">
           <time class="time">所属单位：{{ item.unit }}</time>
           <br>
            <time class="time">负责人：{{ item.leader }}</time>
-          <el-button type="text" class="button" @click="goto">点击进入</el-button>
+          <el-button type="text" class="button" @click="goto(item)">点击进入</el-button>
          
         </div>
       </div>
@@ -34,7 +34,8 @@ export default {
     
     return{
      items:{},
-     name:""
+     name:"",
+     tag:""
     }
   },
   mounted(){
@@ -53,6 +54,7 @@ export default {
         if (response.data.resultCode === 200) {
         that.items = response.data.data
         console.log(response.data.data)
+
       }
         })
      },
@@ -71,8 +73,11 @@ export default {
           })
           this.$router.push('/')
     },
-         goto:function(){
-       this.$router.push('/detail')
+         goto:function(item){
+     this.$router.push({
+          path: '/detail',
+          query: { ruleForm:item }
+         })
      }
    
     },
