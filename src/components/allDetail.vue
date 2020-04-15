@@ -8,7 +8,7 @@
   <el-main>
 <el-card class="box-card" id="main">
   <div slot="header" class="clearfix">
-    <span id="title">序号{{activityId}}：{{Pname}}</span>
+    <span id="title">序号{{projectId}}：{{Pname}}</span>
     
   </div>
   <div  class="text item">
@@ -30,12 +30,12 @@
   </div>
 </el-dialog>
    <hr class="hr"><span>评分：</span><div id="part" v-for="item in list" :key = item.lname>
-   类型：{{item.lname}}  占比：{{item.part}}  得分：<el-input id='partInput' :v-model="item.value" placeholder="请输入"></el-input>
+   类型：{{item.lname}}  占比：{{item.part}}  得分（单项满分100）：<el-input id='partInput' v-model="item.value" placeholder="请输入"></el-input>
   </div></div>
    <hr class="hr">
   <span>评语：</span> <el-input v-model="about" placeholder="请输入"></el-input>
   <hr class="hr">
-     <el-button style="float: right; padding:0 2rem 2rem 0" type="text">确认提交</el-button>
+     <el-button style="float: right; padding:0 2rem 2rem 0" type="text" @click="submit">确认提交</el-button>
 </el-card>
 
   </el-main>
@@ -67,6 +67,29 @@ export default {
   this.show()
   },
   methods: {
+    submit(){
+    var that = this;
+    this.$axios({
+      url:"/score",
+      method:'post',
+      data:{
+        projectId:that.projectId,
+        userId:sessionStorage['userId'],
+        message:that.about,
+        tag:that.list,
+      }
+    }).then(function(response){
+        if (response.data.resultCode === 200) {
+          console.log(response.data.data)
+         that.$message({
+            message: '评分成功',
+            type: 'success',
+            duration: 2000
+          })
+          that.$router.push('/show')
+        }
+    })
+    },
     handledocument(){
         this.dialogFormVisible = true
         var that = this
@@ -95,7 +118,7 @@ export default {
     this.projectId = data.projectId
     this.info = data.info
     this.list = data.tag,
-     console.log(this.list);
+     console.log(data.projectId);
     },
     exit: function () {
       sessionStorage.clear()

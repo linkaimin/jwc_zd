@@ -17,7 +17,7 @@
           <time class="time">所属单位：{{ item.unit }}</time>
           <br>
            <time class="time">负责人：{{ item.leader }}</time>
-          <el-button type="text" class="button" @click="goto(item)">点击进入</el-button>
+          <el-button v-show="item.show" type="text" class="button" @click="goto(item)">点击进入</el-button>
          
         </div>
       </div>
@@ -35,7 +35,7 @@ export default {
     return{
      items:{},
      name:"",
-     tag:""
+     tag:"",
     }
   },
   mounted(){
@@ -49,11 +49,18 @@ export default {
         console.log(data)
         this.$axios({
           method:'get',
-          url:`/project/user?userId=${sessionStorage['userName'].userId}&activityId=${data.activityId}` 
+          url:`/project/user?userId=${sessionStorage['userId']}&activityId=${data.activityId}` 
         }).then(function(response){
         if (response.data.resultCode === 200) {
         that.items = response.data.data
-        console.log(response.data.data)
+        for(let i of that.items){
+          if(i.isScored == '已评分'){
+           i.show = false
+          }else{
+           i.show = true
+          }
+        }
+        console.log(that.items)
 
       }
         })
