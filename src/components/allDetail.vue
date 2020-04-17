@@ -18,6 +18,8 @@
    <hr class="hr">
    <div id="text">内容简介：{{info}}</div>
    <hr class="hr">
+   超链接： <a :href=docUrl >{{docUrl}}</a><br>
+   <hr class="hr">
    <el-button @click="handledocument">附件预览</el-button><el-dialog title="查看文件" :visible.sync="dialogFormVisible">
 
         <label id="checkbox" v-for="item in file" :key = item>
@@ -61,6 +63,7 @@ export default {
       dialogFormVisible: false,
       file:[],
       list:[],
+      docUrl:""
     }
   },
   mounted(){
@@ -86,7 +89,10 @@ export default {
             type: 'success',
             duration: 2000
           })
-          that.$router.push('/show')
+          that.$router.push({
+          path: '/show',
+          query: {activityId:that.activityId}
+         })
         }
     })
     },
@@ -118,6 +124,7 @@ export default {
     this.projectId = data.projectId
     this.info = data.info
     this.list = data.tag,
+    this.docUrl = data.docUrl
      console.log(data.projectId);
     },
     exit: function () {
