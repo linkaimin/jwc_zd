@@ -22,8 +22,8 @@
    <hr class="hr">
    <el-button @click="handledocument">附件预览</el-button><el-dialog title="查看文件" :visible.sync="dialogFormVisible">
 
-        <label id="checkbox" v-for="item in file" :key = item>
-        <a :href=item>{{item}}</a><br>
+        <label id="checkbox" v-for="item in fileName" :key = item>
+        <a :href=item.url>{{item.name}}</a><br>
         </label>
 
   <div slot="footer" class="dialog-footer">
@@ -63,7 +63,8 @@ export default {
       dialogFormVisible: false,
       file:[],
       list:[],
-      docUrl:""
+      docUrl:"",
+      fileName:[]
     }
   },
   mounted(){
@@ -97,21 +98,24 @@ export default {
     })
     },
     handledocument(){
-        this.dialogFormVisible = true
+       this.dialogFormVisible = true
         var that = this
+        that.fileName = [];
        this.$axios.get('/document/preview/'+that.projectId, {
   
      }).then(function (response){
       if (response.data.resultCode === 200) {
           that.file = response.data.data.file
           console.log(response.data.data)
+          for(let item of that.file){
+            that.fileName.push({
+              name:item.slice(33),
+              url:item
+            })
+          }
+          console.log(that.fileName)
       }
      })
-      },
-    download(){
-       this.$axios.get( `/document/download/${that.projectId}/${that.fileName}`, {
-     })
-     .then(function (response){})
     },
     show(){
     this.name = sessionStorage['userName']
