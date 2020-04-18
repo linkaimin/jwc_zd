@@ -6,6 +6,7 @@
    <span class="name"><i class="el-icon-share i_rd"></i><span @click="exit">安全退出</span></span>
   </el-header>
   <el-main>
+   
 <el-row>
   <el-col :span="6" v-for="item in items" :key="item.projectId" :offset="1"  style="margin-bottom:40px">
     <el-card :body-style="{ padding: '0px' }">
@@ -18,7 +19,7 @@
           <br>
            <time class="time">负责人：{{ item.leader }}</time>
           <el-button v-show="item.show" type="text" class="button" @click="goto(item)">点击进入</el-button>
-         
+          <el-button class="button" type="text" v-show="!item.show" @click="handleExcel(item.projectId)"> 评分表下载</el-button>
         </div>
       </div>
     </el-card>
@@ -36,12 +37,18 @@ export default {
      items:{},
      name:"",
      tag:"",
+     show:true,
+     url:""
     }
   },
   mounted(){
     this.text()
+
   },
   methods: {
+    handleExcel(projectId){
+    window.open(`http://140.143.194.109:8080/jwc/excel/project/export/${projectId}/`+sessionStorage['userId'])
+    },
      text(){
         this.name = sessionStorage['userName']
        var that = this;
@@ -96,6 +103,11 @@ export default {
 <style>
 *{
   margin: 0; padding: 0;
+}
+#excel{
+ float: right;
+  margin-right: 1rem;
+
 }
 #tag{
   float: right;
