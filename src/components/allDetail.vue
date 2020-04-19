@@ -20,10 +20,10 @@
    <hr class="hr">
    超链接： <a :href=docUrl >{{docUrl}}</a><br>
    <hr class="hr">
-   <el-button @click="handledocument">附件预览</el-button><el-dialog title="查看文件" :visible.sync="dialogFormVisible">
+   <el-button @click="handledocument" >附件预览</el-button><el-dialog title="查看文件"  :visible.sync="dialogFormVisible">
 
         <label id="checkbox" v-for="item in fileName" :key = item>
-        <a :href=item.url>{{item.name}}</a><br>
+        <a :href=item.url target="_blank">{{item.name}}</a><br>
         </label>
 
   <div slot="footer" class="dialog-footer">
@@ -32,10 +32,10 @@
   </div>
 </el-dialog>
    <hr class="hr"><span>评分：</span><div id="part" v-for="item in list" :key = item.lname>
-   类型：{{item.lname}}  占比：{{item.part}}  得分（单项满分100）：<el-input id='partInput' v-model="item.value" placeholder="请输入"></el-input>
+   类型：{{item.lname}}  占比：{{item.part}}  得分（单项满分100）：<el-input id='partInput' minlength=1  type="number" v-model="item.value" @input="limitInput(item)" placeholder="请输入"></el-input>
   </div></div>
    <hr class="hr">
-  <span>评语：</span> <el-input v-model="about" placeholder="请输入"></el-input>
+  <span>评语：</span> <el-input minlength=1 v-model="about" placeholder="请输入"></el-input>
   <hr class="hr">
      <el-button style="float: right; padding:0 2rem 2rem 0" type="text" @click="submit">确认提交</el-button>
 </el-card>
@@ -71,6 +71,14 @@ export default {
   this.show()
   },
   methods: {
+    limitInput(item){
+      if(item.value > 100){
+        item.value = 100;
+      } 
+      if(item.value < 0){
+        item.value = 0;
+      } 
+    },
     submit(){
     var that = this;
     this.$axios({
