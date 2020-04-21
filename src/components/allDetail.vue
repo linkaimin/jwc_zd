@@ -81,6 +81,17 @@ export default {
     },
     submit(){
     var that = this;
+    console.log(that.list)
+    for(let i of that.list){
+    if(i.value == ''||i.lname== ''||that.about==''){ 
+       this.$message({
+            message: '未完成全部评分！',
+            type: 'error',
+            duration: 2000
+          })
+          return;
+    }
+    }
     this.$axios({
       url:"/score",
       method:'post',
@@ -104,6 +115,7 @@ export default {
          })
         }
     })
+
     },
     handledocument(){
        this.dialogFormVisible = true
