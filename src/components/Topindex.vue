@@ -55,7 +55,7 @@ export default {
         var mon = formatFunc(date2.getMonth() + 1);
         var day = formatFunc(date2.getDate());
         var hour = date2.getHours();
-        var noon = hour >= 12 ? 'PM' : 'AM';
+        var noon = hour >= 12 ? '下午' : '上午';
         hour = hour>=12?hour-12:hour;
         hour = formatFunc(hour);
         var min = formatFunc(date2.getMinutes());

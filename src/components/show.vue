@@ -6,7 +6,7 @@
    <span class="name"><i class="el-icon-share i_rd"></i><span @click="exit">安全退出</span></span>
   </el-header>
   <el-main>
-   
+  <h2>{{message}}</h2>
 <el-row>
   <el-col :span="6" v-for="item in items" :key="item.projectId" :offset="1"  style="margin-bottom:40px">
     <el-card :body-style="{ padding: '0px' }">
@@ -38,7 +38,8 @@ export default {
      name:"",
      tag:"",
      show:true,
-     url:""
+     url:"",
+     message:""
     }
   },
   mounted(){
@@ -60,6 +61,7 @@ export default {
         }).then(function(response){
         if (response.data.resultCode === 200) {
         that.items = response.data.data
+        if(that.items.length === 0 ){that.message = '该活动尚未添加项目哦！'}
         for(let i of that.items){
           if(i.isScored == '已评分'){
            i.show = false
