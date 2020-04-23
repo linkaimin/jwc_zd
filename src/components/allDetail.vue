@@ -25,14 +25,16 @@
         <label id="checkbox" v-for="item in fileName" :key = item>
         <a :href=item.url target="_blank">{{item.name}}</a><br>
         </label>
-
+<div>
+    {{fileContent}}
+</div>
   <div slot="footer" class="dialog-footer">
     <el-button @click="dialogFormVisible = false">取 消</el-button>
     <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
   </div>
 </el-dialog>
    <hr class="hr"><span>评分：</span><div id="part" v-for="item in list" :key = item.lname>
-   类型：{{item.lname}}  占比：{{item.part}}  得分（单项满分100）：<el-input id='partInput' minlength=1  type="number" v-model="item.value" @input="limitInput(item)" placeholder="请输入"></el-input>
+   类型：{{item.lname}}  占比：{{item.part}}  得分（单项满分{{item.max}}）：<el-input id='partInput' minlength=1  type="number" v-model="item.value" @input="limitInput(item)" placeholder="请输入"></el-input>
   </div></div>
    <hr class="hr">
   <span>评语：</span> <el-input minlength=1 v-model="about" placeholder="请输入"></el-input>
@@ -45,6 +47,7 @@
 </template>
 
 <script>
+
 export default {
   data(){
     return{
@@ -64,7 +67,8 @@ export default {
       file:[],
       list:[],
       docUrl:"",
-      fileName:[]
+      fileName:[],
+      fileContent:""
     }
   },
   mounted(){
@@ -72,8 +76,8 @@ export default {
   },
   methods: {
     limitInput(item){
-      if(item.value > 100){
-        item.value = 100;
+      if(item.value > item.max){
+        item.value = item.max;
       } 
       if(item.value < 0){
         item.value = 0;
@@ -150,6 +154,10 @@ export default {
     this.list = data.tag,
     this.docUrl = data.docUrl
      console.log(data.projectId);
+     for(let i of this.list){
+       i.max = Number(i.part) * 100;
+     }
+     console.log(this.list)
     },
     exit: function () {
       sessionStorage.clear()
