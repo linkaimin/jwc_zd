@@ -1,6 +1,7 @@
 <template>
   <el-container>
   <el-header id="top"> 
+    <base target="_blank" />
    评估系统用户端
    <span class="name">欢迎您：{{name}}</span>
    <span class="name"><i class="el-icon-share i_rd"></i><span @click="exit">安全退出</span></span>
@@ -22,8 +23,8 @@
    <hr class="hr">
    <el-button @click="handledocument" >附件预览</el-button><el-dialog title="查看文件"  :visible.sync="dialogFormVisible">
 
-        <label id="checkbox" v-for="item in fileName" :key = item>
-        <a :href=item.url target="_blank">{{item.name}}</a><br>
+        <label id="checkbox" v-for="item in fileName" :key = item.name>
+        <a :href=item.url target="_blank"  rel="noopener noreferrer">{{item.name}}</a><br>
         </label>
 <div>
     {{fileContent}}
@@ -61,13 +62,12 @@ export default {
       info: "",
       input:"",
       about:"",
-      fileName:"",
       Pname:"",
       dialogFormVisible: false,
       file:[],
       list:[],
       docUrl:"",
-      fileName:[],
+      fileName:[{name:'该项目没有文件！'}],
       fileContent:""
     }
   },
@@ -124,18 +124,21 @@ export default {
     handledocument(){
        this.dialogFormVisible = true
         var that = this
-        that.fileName = [];
+        that.fileName = [{name:'该项目没有文件！'}];
        this.$axios.get('/document/preview/'+that.projectId, {
   
      }).then(function (response){
       if (response.data.resultCode === 200) {
           that.file = response.data.data.file
-          console.log(response.data.data)
+          console.log(that.file)
+          if(that.file.length !== 0){
+            that.fileName = []
           for(let item of that.file){
             that.fileName.push({
               name:item.slice(33),
               url:item
             })
+          }
           }
           console.log(that.fileName)
       }
