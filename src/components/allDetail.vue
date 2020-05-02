@@ -40,7 +40,18 @@
    <hr class="hr">
   <span>评语：</span> <el-input minlength=1 v-model="about" placeholder="请输入"></el-input>
   <hr class="hr">
-     <el-button style="float: right; padding:0 2rem 2rem 0" type="text" @click="submit">确认提交</el-button>
+
+<el-button style="padding:2rem 2rem 0 0" type="text"  @click="visible = true">确认提交</el-button>
+  <el-popover
+  placement="top"
+  width="160"
+  v-model="visible">
+  <p>确定提交评分吗？</p>
+  <div style="text-align: right; margin: 0">
+    <el-button size="mini" type="text" @click="visible = false">取消</el-button>
+    <el-button type="primary" size="mini" @click="submit">确定</el-button>
+  </div>
+</el-popover>
 </el-card>
 
   </el-main>
@@ -68,7 +79,8 @@ export default {
       list:[],
       docUrl:"",
       fileName:[{name:'该项目没有文件！'}],
-      fileContent:""
+      fileContent:"",
+      visible :false
     }
   },
   mounted(){
@@ -87,7 +99,7 @@ export default {
     var that = this;
     console.log(that.list)
     for(let i of that.list){
-    if(i.value == ''||i.lname== ''||that.about==''){ 
+    if(i.value == null){ 
        this.$message({
             message: '未完成全部评分！',
             type: 'error',
@@ -162,15 +174,30 @@ export default {
      }
      console.log(this.list)
     },
-    exit: function () {
-      sessionStorage.clear()
-        this.$message({
+ exit: function () {
+      var that = this;
+             this.$axios.get('/logout', {
+
+  })
+  .then(function (response) {
+    console.log(response);
+      if (response.data.resultCode === 200) {
+        sessionStorage.clear()
+        that.$message({
             message: '退出成功',
             type: 'success',
             duration: 2000
           })
-          this.$router.push('/')
-    }
+          that.$router.push('/')
+       
+        } else {
+         that.$router.push('/')
+        }
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+    } 
    
     },
     handleClose(tag) {

@@ -91,15 +91,30 @@ export default {
      }
    })
     },
-    exit: function () {
-      sessionStorage.clear()
-        this.$message({
+ exit: function () {
+      var that = this;
+             this.$axios.get('/logout', {
+
+  })
+  .then(function (response) {
+    console.log(response);
+      if (response.data.resultCode === 200) {
+        sessionStorage.clear()
+        that.$message({
             message: '退出成功',
             type: 'success',
             duration: 2000
           })
-          this.$router.push('/')
-    },
+          that.$router.push('/')
+       
+        } else {
+         that.$router.push('/')
+        }
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+    } 
     
     },
 
